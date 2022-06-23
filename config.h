@@ -35,13 +35,14 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class             instance    title       tags mask     isfloating   monitor */
-	{ "xfce4-terminal",  NULL,       NULL,       1 << 1,            0,           0 },
-	{ "Firefox",         NULL,       NULL,       1 << 2,            0,           0 },
-	{ "code-oss",        NULL,       NULL,       1 << 3,            0,           0 },
-	{ "libreoffice",     NULL,	 NULL, 	     1 << 4, 		0, 	     0 },
-	{ "p3x-onenote",     NULL,	 NULL, 	     1 << 4, 		0, 	     0 },
-	{ "Mail", 	     NULL,       NULL,       1 << 5, 		0, 	     0 },
-	{ "keepass2", 	     NULL, 	 NULL, 	     1 << 9, 		1, 	     0 },
+	{ "xfce4-terminal",  NULL,       NULL,       1 << 0,            0,           0 },
+	{ "Firefox",         NULL,       NULL,       1 << 1,            0,           0 },
+	{ "code-oss",        NULL,       NULL,       1 << 2,            0,           0 },
+	{ "libreoffice",     NULL,	 NULL, 	     1 << 3, 		0, 	     0 },
+	{ "p3x-onenote",     NULL,	 NULL, 	     1 << 3, 		0, 	     0 },
+	{ "Mail", 	     NULL,       NULL,       1 << 4, 		0, 	     0 },
+	{ "discord", 	     NULL,       NULL,       1 << 4, 		0, 	     0 },
+	{ "keepassxc", 	     NULL, 	 NULL, 	     1 << 10, 		0, 	     0 },
 
 };
 
