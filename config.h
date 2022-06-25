@@ -2,48 +2,45 @@
 
 /* appearance */
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
-static const Gap default_gap        = {.isgap = 1, .realgap = 5, .gappx = 5};
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "fontawesome:size=12" };
 static const char dmenufont[]       = "fontawesome:size=12";
 
-/* background color */
+/* default gap between windows */
+static const Gap default_gap        = {.isgap = 1, .realgap = 5, .gappx = 5};
+
+/* colors */
 static const char col_gray1[]       = "#333333";
-
-/* inactive window border color */
 static const char col_gray2[]       = "#444444";
-
 static const char col_gray3[]       = "#bbbbbb";
-
 static const char col_gray4[]       = "#eeeeee";
-
-static const char col_cyan[]        = "#005577";
+static const char col_cyan[]        = "#155133";
 
 static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+    /*               fg         bg         border   */
+    [SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+    [SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
 /* tagging */
 static const char *tags[] = { "", "", "", "", "", "6",  "7", "8", "9", "" };
 
 static const Rule rules[] = {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 */
-	/* class             instance    title       tags mask     isfloating   monitor */
-	{ "xfce4-terminal",  NULL,       NULL,       1 << 0,            0,           0 },
-	{ "Firefox",         NULL,       NULL,       1 << 1,            0,           0 },
-	{ "code-oss",        NULL,       NULL,       1 << 2,            0,           0 },
-	{ "libreoffice",     NULL,	 NULL, 	     1 << 3, 		0, 	     0 },
-	{ "p3x-onenote",     NULL,	 NULL, 	     1 << 3, 		0, 	     0 },
-	{ "Mail", 	     NULL,       NULL,       1 << 4, 		0, 	     0 },
-	{ "discord", 	     NULL,       NULL,       1 << 4, 		0, 	     0 },
-	{ "keepassxc", 	     NULL, 	 NULL, 	     1 << 10, 		0, 	     0 },
+    /* xprop(1):
+     *  WM_CLASS(STRING) = instance, class
+     *  WM_NAME(STRING) = title
+     */
+    /* class            instance    title       tags mask   isfloating  monitor */
+    { "xfce4-terminal", NULL,       NULL,       1 << 0,     0,          0 },
+    { "firefox",        NULL,       NULL,       1 << 1,     0,          0 },
+    { "code-oss",       NULL,       NULL,       1 << 2,     0,          0 },
+    { "libreoffice",    NULL,       NULL,       1 << 3,     0,          0 },
+    { "p3x-onenote",    NULL,       NULL,       1 << 3,     0,          0 },
+    { "Mail",           NULL,       NULL,       1 << 4,     0,          0 },
+    { "discord",        NULL,       NULL,       1 << 4,     0,          0 },
+    { "keepassxc",      NULL,       NULL,       1 << 10,    0,          0 },
 
 };
 
@@ -62,6 +59,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod1Mask
+
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -73,50 +71,70 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+
+static const char *dmenucmd[] = { 
+    "dmenu_run", 
+    "-m", dmenumon, 
+    "-fn", dmenufont, 
+    "-nb", col_gray1, 
+    "-nf", col_gray3, 
+    "-sb", col_cyan, 
+    "-sf", col_gray4, 
+    NULL 
+};
+
 static const char *termcmd[]  = { "xfce4-terminal", NULL };
 static const char *firefoxcmd[]  = { "firefox", NULL };
+
 static const char *brightnessup[] = { "xbacklight", "-inc", "5", NULL  };
 static const char *brightnessdown[] = { "xbacklight", "-dec", "5", NULL  };
-static const char *mutetoggle[] =  { "amixer", "sset", "Master", "toggle", NULL  };
 
+static const char *togglevol[] =  { "amixer", "sset", "Master", "toggle", NULL  };
 static const char *raisevol[] = { "amixer", "sset", "Master", "5%+", NULL  };
 static const char *lowervol[] = { "amixer", "sset", "Master", "5%-", NULL  };
 
 
-
 static Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_n,      spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_m,      spawn,          {.v = firefoxcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_o,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_u,      zoom,           {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY, 			XK_q,      killclient,     {0} },
+    /* modifier                     key        function        argument */
+
+    /* launch apps */
+    { MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+    { MODKEY,                       XK_n,      spawn,          {.v = termcmd } },
+    { MODKEY,                       XK_m,      spawn,          {.v = firefoxcmd } },
+
+    /* control windowing layout */
+    { MODKEY,                       XK_b,      togglebar,      {0} },
+    { MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+    { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+    { MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+    { MODKEY,                       XK_o,      incnmaster,     {.i = -1 } },
+    { MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
+    { MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+    { MODKEY,                       XK_u,      zoom,           {0} },
+    { MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ShiftMask,             XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+
+
+    /* control monitors */
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 
-	{ 0,				XF86XK_MonBrightnessUp,   spawn, {.v = brightnessup } },
-	{ 0, 				XF86XK_MonBrightnessDown, spawn, {.v = brightnessdown } },
-	{ 0, 				XF86XK_AudioRaiseVolume,  spawn, {.v = raisevol } },
-	{ 0, 				XF86XK_AudioLowerVolume,  spawn, {.v = lowervol } },
-	{ 0, 				XF86XK_AudioMute,  	  spawn, {.v = mutetoggle } },
+    /* special keys */
+	{ 0, XF86XK_MonBrightnessUp,                spawn,		   {.v = brightnessup } },
+	{ 0, XF86XK_MonBrightnessDown,              spawn,		   {.v = brightnessdown } },
+	{ 0, XF86XK_AudioRaiseVolume,               spawn,		   {.v = raisevol } },
+	{ 0, XF86XK_AudioLowerVolume,               spawn,		   {.v = lowervol } },
+	{ 0, XF86XK_AudioMute,                      spawn,		   {.v = togglevol } },
 	
-
+    /* tags */
+    { MODKEY,                       XK_a, shiftview, {.i = -1 } },
+	{ MODKEY,                       XK_s, shiftview, {.i = +1 } },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
@@ -128,6 +146,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	TAGKEYS(                        XK_0,                      9)
+
+    { MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 

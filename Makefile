@@ -3,7 +3,7 @@
 
 include config.mk
 
-SRC = drw.c dwm.c util.c
+SRC = src/drw.c src/dwm.c src/util.c
 OBJ = ${SRC:.c=.o}
 
 all: options dwm
@@ -15,12 +15,9 @@ options:
 	@echo "CC       = ${CC}"
 
 .c.o:
-	${CC} -c ${CFLAGS} $<
+	${CC} -c ${CFLAGS} $< -o $@
 
 ${OBJ}: config.h config.mk
-
-config.h:
-	cp config.def.h $@
 
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
