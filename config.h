@@ -1,5 +1,9 @@
 /* See LICENSE file for copyright and license details. */
 
+#pragma once
+
+#include "src/dwm.h"
+
 /* appearance */
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
