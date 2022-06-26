@@ -3,7 +3,7 @@
  * Maintainer: joekamprad <joekamprad@endeavouros.com>
  *******************************************************/
 configuration {
-    font:                           "Noto Sans Regular 10";
+    font:                           "Noto Sans Regular 12";
     show-icons:                     false;
     scroll-method:                  0;
     disable-history:                false;
@@ -17,10 +17,8 @@ window {
     border:                         0;
     padding:                        10;
     transparency:                   "real";
-    width:                          120px;
+    width:                          140px;
     location:                       east;
-/*y-offset:                       18;*/
-/*x-offset:                       850;*/
 }
 listview {
     lines:                          6;
