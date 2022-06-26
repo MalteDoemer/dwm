@@ -9,8 +9,8 @@ static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "fontawesome:size=12" };
-static const char dmenufont[]       = "fontawesome:size=12";
+static const char *fonts[]          = { "fontawesome:size=14" };
+static const char dmenufont[]       = "fontawesome:size=14";
 
 /* default gap between windows */
 static const Gap default_gap        = {.isgap = 1, .realgap = 5, .gappx = 5};
@@ -20,12 +20,18 @@ static const char col_gray1[]       = "#333333";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#155133";
+static const char col_green[]       = "#155133";
+static const char col_yellow[]      = "#ffff00";
+static const char col_red[]         = "#ff0000";
 
 static const char *colors[][3]      = {
-    /*               fg         bg         border   */
-    [SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-    [SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+    /*                   fg          bg         border   */
+    [SchemeNorm]     = { col_gray3,  col_gray1, col_gray2 },
+    [SchemeSel]      = { col_gray1,  col_gray3, col_gray2 },
+    [SchemeTitleBar] = { col_gray1,  col_gray1, col_gray2 }, // make fg = bg to hide the text XD
+    [SchemeGreenFg]  = { col_green,  col_gray1, col_gray2 },
+    [SchemeYellowFg] = { col_yellow, col_gray1, col_gray2 },
+    [SchemeRedFg]    = { col_red,    col_gray1, col_gray2 },
 };
 
 /* tagging */
@@ -82,8 +88,8 @@ static const char *dmenucmd[] = {
     "-fn", dmenufont, 
     "-nb", col_gray1, 
     "-nf", col_gray3, 
-    "-sb", col_cyan, 
-    "-sf", col_gray4, 
+    "-sb", col_gray3, 
+    "-sf", col_gray1, 
     NULL 
 };
 
