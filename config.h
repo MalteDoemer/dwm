@@ -97,6 +97,56 @@ static const char *togglevol[] =  { "amixer", "sset", "Master", "toggle", NULL  
 static const char *raisevol[] = { "amixer", "sset", "Master", "5%+", NULL  };
 static const char *lowervol[] = { "amixer", "sset", "Master", "5%-", NULL  };
 
+static const char *shutdowncmd[] = {"systemctl", "poweroff", NULL};
+static const char *rebootcmd[] = {"systemctl", "reboot", NULL};
+static const char *suspendcmd[] = {"systemctl", "suspend", NULL};
+static const char *hibernatecmd[] = {"systemctl", "hibernate", NULL};
+static const char *lockcmd[] = {"dm-tool", "lock", NULL};
+
+static const RofiMenuEntry powermenu_entries[] = {
+    { .name = " Shutdown", .argv =  shutdowncmd },
+    { .name = " Reboot", .argv = rebootcmd },
+    { .name = " Suspend", .argv = suspendcmd },
+    { .name = " Hibernate", .argv = hibernatecmd },
+    { .name = " Lock", .argv = lockcmd },
+    { .name = " Cancle", .argv = NULL },
+};
+
+static const RofiMenu powermenu = {
+    .fg_color = "#bbbbbb",
+    .bg_color = "#111111",
+    .hlfg_color = "#bbbbbb",
+    .hlbg_color = "#111111",
+    .border_color = "#222222",
+    .config_file = "~/.config/dwm/rofi/powermenu.rasi",
+    .prompt = "",
+    .entry_count = LENGTH(powermenu_entries),
+    .menu_entries = powermenu_entries
+};
+
+static const char *performancecmd[] = {"powerprofilesctl", "set", "performance", NULL};
+static const char *balancedcmd[] = {"powerprofilesctl", "set", "balanced", NULL};
+static const char *powersavercmd[] = {"powerprofilesctl", "set", "power-saver", NULL};
+
+
+static const RofiMenuEntry powerprofile_entries[] = {
+    { .name = " Performance", .argv =  performancecmd },
+    { .name = " Balanced", .argv = balancedcmd },
+    { .name = " Power Saver", .argv = powersavercmd },
+    { .name = " Cancle", .argv = NULL },
+};
+
+static const RofiMenu powerprofile_menu = {
+    .fg_color = "#bbbbbb",
+    .bg_color = "#111111",
+    .hlfg_color = "#bbbbbb",
+    .hlbg_color = "#111111",
+    .border_color = "#222222",
+    .config_file = "~/.config/dwm/rofi/powerprofile.rasi",
+    .prompt = "",
+    .entry_count = LENGTH(powerprofile_entries),
+    .menu_entries = powerprofile_entries
+};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
@@ -135,6 +185,10 @@ static Key keys[] = {
 	{ 0, XF86XK_AudioRaiseVolume,               spawn,		   {.v = raisevol } },
 	{ 0, XF86XK_AudioLowerVolume,               spawn,		   {.v = lowervol } },
 	{ 0, XF86XK_AudioMute,                      spawn,		   {.v = togglevol } },
+
+    /* menus */
+    { MODKEY,                       XK_p,       rofimenu,      {.v = &powermenu} },
+    { MODKEY|ShiftMask,             XK_p,       rofimenu,      {.v = &powerprofile_menu} },
 	
     /* tags */
     { MODKEY,                       XK_a, shiftview, {.i = -1 } },

@@ -134,135 +134,121 @@ typedef struct {
 	int monitor;
 } Rule;
 
-/* function declarations */
-static void applyrules(Client *c);
-static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
-static void arrange(Monitor *m);
-static void arrangemon(Monitor *m);
-static void attach(Client *c);
-static void attachstack(Client *c);
-static void buttonpress(XEvent *e);
-static void checkotherwm(void);
-static void cleanup(void);
-static void cleanupmon(Monitor *mon);
-static void clientmessage(XEvent *e);
-static void configure(Client *c);
-static void configurenotify(XEvent *e);
-static void configurerequest(XEvent *e);
-static Monitor *createmon(void);
-static void destroynotify(XEvent *e);
-static void detach(Client *c);
-static void detachstack(Client *c);
-static Monitor *dirtomon(int dir);
-static void drawbar(Monitor *m);
-static void drawbars(void);
-static void enternotify(XEvent *e);
-static void expose(XEvent *e);
-static void focus(Client *c);
-static void focusin(XEvent *e);
-static void focusmon(const Arg *arg);
-static void focusstack(const Arg *arg);
-static void gap_copy(Gap *to, const Gap *from);
-static Atom getatomprop(Client *c, Atom prop);
-static int getrootptr(int *x, int *y);
-static long getstate(Window w);
-static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
-static void grabbuttons(Client *c, int focused);
-static void grabkeys(void);
-static void incnmaster(const Arg *arg);
-static void keypress(XEvent *e);
-static void killclient(const Arg *arg);
-static void manage(Window w, XWindowAttributes *wa);
-static void mappingnotify(XEvent *e);
-static void maprequest(XEvent *e);
-static void monocle(Monitor *m);
-static void motionnotify(XEvent *e);
-static void movemouse(const Arg *arg);
-static Client *nexttiled(Client *c);
-static void pop(Client *);
-static void propertynotify(XEvent *e);
-static void quit(const Arg *arg);
-static Monitor *recttomon(int x, int y, int w, int h);
-static void resize(Client *c, int x, int y, int w, int h, int interact);
-static void resizeclient(Client *c, int x, int y, int w, int h);
-static void resizemouse(const Arg *arg);
-static void restack(Monitor *m);
-static void run(void);
-static void scan(void);
-static int sendevent(Client *c, Atom proto);
-static void sendmon(Client *c, Monitor *m);
-static void setclientstate(Client *c, long state);
-static void setfocus(Client *c);
-static void setfullscreen(Client *c, int fullscreen);
-static void setgaps(const Arg *arg);
-static void setlayout(const Arg *arg);
-static void setmfact(const Arg *arg);
-static void setup(void);
-static void seturgent(Client *c, int urg);
-static void showhide(Client *c);
-static void sigchld(int unused);
-static void spawn(const Arg *arg);
-static void tag(const Arg *arg);
-static void tagmon(const Arg *arg);
-static void tile(Monitor *);
-static void togglebar(const Arg *arg);
-static void togglefloating(const Arg *arg);
-static void toggletag(const Arg *arg);
-static void toggleview(const Arg *arg);
-static void unfocus(Client *c, int setfocus);
-static void unmanage(Client *c, int destroyed);
-static void unmapnotify(XEvent *e);
-static void updatebarpos(Monitor *m);
-static void updatebars(void);
-static void updateclientlist(void);
-static int updategeom(void);
-static void updatenumlockmask(void);
-static void updatesizehints(Client *c);
-static void updatestatus(void);
-static void updatetitle(Client *c);
-static void updatewindowtype(Client *c);
-static void updatewmhints(Client *c);
-static void shiftview(const Arg *arg);
-static void view(const Arg *arg);
-static Client *wintoclient(Window w);
-static Monitor *wintomon(Window w);
-static int xerror(Display *dpy, XErrorEvent *ee);
-static int xerrordummy(Display *dpy, XErrorEvent *ee);
-static int xerrorstart(Display *dpy, XErrorEvent *ee);
-static void zoom(const Arg *arg);
+typedef struct {
+    const char *name;
+    const char **argv;
+} RofiMenuEntry;
 
-/* variables */
-static const char broken[] = "broken";
-static char stext[256];
-static int screen;
-static int sw, sh;           /* X display screen geometry width, height */
-static int bh, blw = 0;      /* bar geometry */
-static int lrpad;            /* sum of left and right padding for text */
-static int (*xerrorxlib)(Display *, XErrorEvent *);
-static unsigned int numlockmask = 0;
-static void (*handler[LASTEvent]) (XEvent *) = {
-	[ButtonPress] = buttonpress,
-	[ClientMessage] = clientmessage,
-	[ConfigureRequest] = configurerequest,
-	[ConfigureNotify] = configurenotify,
-	[DestroyNotify] = destroynotify,
-	[EnterNotify] = enternotify,
-	[Expose] = expose,
-	[FocusIn] = focusin,
-	[KeyPress] = keypress,
-	[MappingNotify] = mappingnotify,
-	[MapRequest] = maprequest,
-	[MotionNotify] = motionnotify,
-	[PropertyNotify] = propertynotify,
-	[UnmapNotify] = unmapnotify
-};
-static Atom wmatom[WMLast], netatom[NetLast];
-static int running = 1;
-static Cur *cursor[CurLast];
-static Clr **scheme;
-static Display *dpy;
-static Drw *drw;
-static Monitor *mons, *selmon;
-static Window root, wmcheckwin;
+typedef struct {
+    const char *fg_color;
+    const char *bg_color;
+    const char *hlfg_color;
+    const char *hlbg_color;
+    const char *border_color;
+    const char *config_file;
+    const char *prompt;
+
+    int entry_count;
+    const RofiMenuEntry *menu_entries;
+} RofiMenu;
+
+/* function declarations */
+void applyrules(Client *c);
+int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
+void arrange(Monitor *m);
+void arrangemon(Monitor *m);
+void attach(Client *c);
+void attachstack(Client *c);
+void buttonpress(XEvent *e);
+void checkotherwm(void);
+void cleanup(void);
+void cleanupmon(Monitor *mon);
+void clientmessage(XEvent *e);
+void configure(Client *c);
+void configurenotify(XEvent *e);
+void configurerequest(XEvent *e);
+Monitor *createmon(void);
+void destroynotify(XEvent *e);
+void detach(Client *c);
+void detachstack(Client *c);
+Monitor *dirtomon(int dir);
+void drawbar(Monitor *m);
+void drawbars(void);
+void enternotify(XEvent *e);
+void expose(XEvent *e);
+void focus(Client *c);
+void focusin(XEvent *e);
+void focusmon(const Arg *arg);
+void focusstack(const Arg *arg);
+void gap_copy(Gap *to, const Gap *from);
+Atom getatomprop(Client *c, Atom prop);
+int getrootptr(int *x, int *y);
+long getstate(Window w);
+int gettextprop(Window w, Atom atom, char *text, unsigned int size);
+void grabbuttons(Client *c, int focused);
+void grabkeys(void);
+void incnmaster(const Arg *arg);
+void keypress(XEvent *e);
+void killclient(const Arg *arg);
+void manage(Window w, XWindowAttributes *wa);
+void mappingnotify(XEvent *e);
+void maprequest(XEvent *e);
+void monocle(Monitor *m);
+void motionnotify(XEvent *e);
+void movemouse(const Arg *arg);
+Client *nexttiled(Client *c);
+void pop(Client *);
+void propertynotify(XEvent *e);
+void quit(const Arg *arg);
+Monitor *recttomon(int x, int y, int w, int h);
+void resize(Client *c, int x, int y, int w, int h, int interact);
+void resizeclient(Client *c, int x, int y, int w, int h);
+void resizemouse(const Arg *arg);
+void restack(Monitor *m);
+void run(void);
+void scan(void);
+int sendevent(Client *c, Atom proto);
+void sendmon(Client *c, Monitor *m);
+void setclientstate(Client *c, long state);
+void setfocus(Client *c);
+void setfullscreen(Client *c, int fullscreen);
+void setgaps(const Arg *arg);
+void setlayout(const Arg *arg);
+void setmfact(const Arg *arg);
+void setup(void);
+void seturgent(Client *c, int urg);
+void showhide(Client *c);
+void sigchld(int unused);
+void spawn(const Arg *arg);
+void rofimenu(const Arg *arg);
+void tag(const Arg *arg);
+void tagmon(const Arg *arg);
+void tile(Monitor *);
+void togglebar(const Arg *arg);
+void togglefloating(const Arg *arg);
+void toggletag(const Arg *arg);
+void toggleview(const Arg *arg);
+void unfocus(Client *c, int setfocus);
+void unmanage(Client *c, int destroyed);
+void unmapnotify(XEvent *e);
+void updatebarpos(Monitor *m);
+void updatebars(void);
+void updateclientlist(void);
+int updategeom(void);
+void updatenumlockmask(void);
+void updatesizehints(Client *c);
+void updatestatus(void);
+void updatetitle(Client *c);
+void updatewindowtype(Client *c);
+void updatewmhints(Client *c);
+void shiftview(const Arg *arg);
+void view(const Arg *arg);
+Client *wintoclient(Window w);
+Monitor *wintomon(Window w);
+int xerror(Display *dpy, XErrorEvent *ee);
+int xerrordummy(Display *dpy, XErrorEvent *ee);
+int xerrorstart(Display *dpy, XErrorEvent *ee);
+void zoom(const Arg *arg);
+
 
 
