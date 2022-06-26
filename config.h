@@ -128,7 +128,6 @@ static const char *performancecmd[] = {"powerprofilesctl", "set", "performance",
 static const char *balancedcmd[] = {"powerprofilesctl", "set", "balanced", NULL};
 static const char *powersavercmd[] = {"powerprofilesctl", "set", "power-saver", NULL};
 
-
 static const RofiMenuEntry powerprofile_entries[] = {
     { .name = " Performance", .argv =  performancecmd },
     { .name = " Balanced", .argv = balancedcmd },
