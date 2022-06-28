@@ -118,7 +118,7 @@ static const RofiMenuEntry powermenu_entries[] = {
     { .name = " Cancle", .argv = NULL },
 };
 
-static const RofiMenu powermenu = {
+static const RofiMenu power_menu = {
     .fg_color = "#bbbbbb",
     .bg_color = "#111111",
     .hlfg_color = "#bbbbbb",
@@ -152,6 +152,30 @@ static const RofiMenu powerprofile_menu = {
     .entry_count = LENGTH(powerprofile_entries),
     .menu_entries = powerprofile_entries
 };
+
+static const char* laptopcmd[] = { "screenlayout", "laptop.sh", NULL };
+static const char* monitorcmd[] = { "screenlayout", "monitor.sh", NULL };
+static const char* settingscmd[] = { "arandr", NULL };
+
+static const RofiMenuEntry screenlayout_entries[] = {
+    { .name = " Laptop", .argv =  laptopcmd },
+    { .name = " Monitor", .argv = monitorcmd },
+    { .name = " Settings", .argv = settingscmd },
+    { .name = " Cancle", .argv = NULL },
+};
+
+static const RofiMenu screenlayout_menu = {
+    .fg_color = "#bbbbbb",
+    .bg_color = "#111111",
+    .hlfg_color = "#bbbbbb",
+    .hlbg_color = "#111111",
+    .border_color = "#222222",
+    .config_file = "~/.config/dwm/rofi/screenlayout.rasi",
+    .prompt = "",
+    .entry_count = LENGTH(screenlayout_entries),
+    .menu_entries = screenlayout_entries
+};
+
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
@@ -189,8 +213,9 @@ static Key keys[] = {
 	{ 0, XF86XK_AudioMute,                      spawn,		   {.v = togglevol } },
 
     /* menus */
-    { MODKEY,                       XK_p,       rofimenu,      {.v = &powermenu} },
+    { MODKEY,                       XK_p,       rofimenu,      {.v = &power_menu} },
     { MODKEY|ShiftMask,             XK_p,       rofimenu,      {.v = &powerprofile_menu} },
+    { MODKEY|ShiftMask,             XK_l,       rofimenu,      {.v = &screenlayout_menu} },
 	
     /* tags */
     { MODKEY,                       XK_a, shiftview, {.i = -1 } },
