@@ -96,8 +96,8 @@ static const char *dmenucmd[] = {
 static const char *termcmd[]  = { "xfce4-terminal", NULL };
 static const char *firefoxcmd[]  = { "firefox", NULL };
 
-static const char *brightnessup[] = { "xbacklight", "-inc", "5", NULL  };
-static const char *brightnessdown[] = { "xbacklight", "-dec", "5", NULL  };
+static const char *brightnessup[] = { "brightnessctl", "s", "+5%", NULL  };
+static const char *brightnessdown[] = { "brightnessctl", "s", "5%-", NULL  };
 
 static const char *togglevol[] =  { "amixer", "sset", "Master", "toggle", NULL  };
 static const char *raisevol[] = { "amixer", "sset", "Master", "5%+", NULL  };
@@ -215,7 +215,7 @@ static Key keys[] = {
     /* menus */
     { MODKEY,                       XK_p,       rofimenu,      {.v = &power_menu} },
     { MODKEY|ShiftMask,             XK_p,       rofimenu,      {.v = &powerprofile_menu} },
-    { MODKEY|ShiftMask,             XK_l,       rofimenu,      {.v = &screenlayout_menu} },
+    { MODKEY,                       XK_l,       rofimenu,      {.v = &screenlayout_menu} },
 	
     /* tags */
     { MODKEY,                       XK_a, shiftview, {.i = -1 } },
