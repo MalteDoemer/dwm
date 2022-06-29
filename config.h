@@ -37,12 +37,15 @@ static const char *colors[][3]      = {
 /* tagging */
 static const char *tags[] = { "", "", "", "", "", "",  "", "", "", "" };
 
-static const Rule rules[] = {
+/* disable all rules */
+static const Rule rules[0];
+
     /* xprop(1):
      *  WM_CLASS(STRING) = instance, class
      *  WM_NAME(STRING) = title
      */
     /* class            instance    title       tags mask   isfloating  monitor */
+    /*
     { "xfce4-terminal", NULL,       NULL,       1 << 0,     0,          0 },
     { "firefox",        NULL,       NULL,       1 << 1,     0,          0 },
     { "code-oss",       NULL,       NULL,       1 << 2,     0,          0 },
@@ -50,9 +53,9 @@ static const Rule rules[] = {
     { "p3x-onenote",    NULL,       NULL,       1 << 3,     0,          0 },
     { "Mail",           NULL,       NULL,       1 << 4,     0,          0 },
     { "discord",        NULL,       NULL,       1 << 4,     0,          0 },
-    { "keepassxc",      NULL,       NULL,       1 << 10,    0,          0 },
+    { "keepassxc",      NULL,       NULL,       1 << 10,    0,          0 }, 
 
-};
+}; */
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
