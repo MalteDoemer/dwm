@@ -215,7 +215,7 @@ static Key keys[] = {
     /* menus */
     { MODKEY,                       XK_p,       rofimenu,      {.v = &power_menu} },
     { MODKEY|ShiftMask,             XK_p,       rofimenu,      {.v = &powerprofile_menu} },
-    { MODKEY,                       XK_l,       rofimenu,      {.v = &screenlayout_menu} },
+    { MODKEY|ShiftMask,             XK_l,       rofimenu,      {.v = &screenlayout_menu} },
 	
     /* tags */
     { MODKEY,                       XK_a, shiftview, {.i = -1 } },
