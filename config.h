@@ -92,10 +92,13 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] = { "rofi", "-modi", "drun", "-show", "drun", "-config", "~/.config/rofi/dmenu.rasi",  NULL };
-static const char *powermenucmd[] = { "rofimenu", "powermenu", NULL };
-static const char *powerprofilemenucmd[] = { "rofimenu", "powerprofile", NULL };
 static const char *termcmd[]  = { "xfce4-terminal", NULL };
 static const char *firefoxcmd[] = { "firefox", NULL  };
+
+static const char *powermenucmd[] = { "powermenu", NULL };
+static const char *powerprofilemenucmd[] = { "powerprofile", NULL };
+static const char *wifimenucmd[] = { "wifimenu", NULL };
+static const char *screenlayoutcmd[] = { "layoutmenu", NULL };
 
 static const char *raisevol[] = SHCMD("amixer set Master 5%+; pkill -RTMIN+" SIG_VOLUME " dwmstatus");
 static const char *lowervol[] = SHCMD("amixer set Master 5%-; pkill -RTMIN+" SIG_VOLUME " dwmstatus");
@@ -111,8 +114,12 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_d,      spawn,           {.v = dmenucmd } },
 	{ MODKEY,                       XK_n,      spawn,           {.v = termcmd } },
     { MODKEY,                       XK_m,      spawn,           {.v = firefoxcmd } },
+
 	{ MODKEY,                       XK_p,      spawn,           {.v = powermenucmd } },
-	{ MODKEY|ShiftMask,             XK_p,      spawn,           {.v = powerprofilemenucmd } },
+	{ MODKEY|ShiftMask,  			XK_p,      spawn,           {.v = powerprofilemenucmd } },
+	{ MODKEY,             			XK_l,      spawn,           {.v = screenlayoutcmd } },
+	{ MODKEY,						XK_c,      spawn,           {.v = wifimenucmd } },
+
 
     /* control windowing layout */
 	{ MODKEY,                       XK_b,      togglebar,       {0} },
