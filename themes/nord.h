@@ -13,6 +13,6 @@ static const char grey[]      = "#646a76";
 static const char red[]      = "#d57780";
 static const char orange[]      = "#caaa6a";
 static const char yellow[]      = "#ebcb8b";
-static const char green[]      = "#ffff00";
+static const char green[]      = "#89b482";
 static const char blue[]      = "#81a1c1";
 static const char pink[]      = "#e39a83";
