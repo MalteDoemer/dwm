@@ -87,9 +87,6 @@ static const Layout layouts[] = {
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { "/bin/sh", "-c", cmd, NULL }
 
-/* signals to send to dwmstatus */
-#define SIG_VOLUME "3"
-
 /* commands */
 static const char *dmenucmd[] = { "rofi", "-modi", "drun", "-show", "drun", "-config", "~/.config/rofi/dmenu.rasi",  NULL };
 static const char *termcmd[]  = { "xfce4-terminal", NULL };
@@ -100,12 +97,12 @@ static const char *powerprofilemenucmd[] = { "powerprofile", NULL };
 static const char *wifimenucmd[] = { "wifimenu", NULL };
 static const char *screenlayoutcmd[] = { "layoutmenu", NULL };
 
-static const char *raisevol[] = SHCMD("amixer set Master 5%+; pkill -RTMIN+" SIG_VOLUME " dwmstatus");
-static const char *lowervol[] = SHCMD("amixer set Master 5%-; pkill -RTMIN+" SIG_VOLUME " dwmstatus");
-static const char *togglevol[] = SHCMD("amixer set Master toggle; pkill -RTMIN+" SIG_VOLUME " dwmstatus");
+static const char *raisevol[] = SHCMD("amixer_wrapper set Master 5%+");
+static const char *lowervol[] = SHCMD("amixer_wrapper set Master 5%-");
+static const char *togglevol[] = SHCMD("amixer_wrapper set Master toggle");
 
-static const char *brightnessup[] = SHCMD("brightnessctl s +5%");
-static const char *brightnessdown[] = SHCMD("brightnessctl s 5%-");
+static const char *brightnessup[] = SHCMD("brightnessctl_wrapper s +5%");
+static const char *brightnessdown[] = SHCMD("brightnessctl_wrapper s 5%-");
 
 static const Key keys[] = {
 	/* modifier                     key        function         argument */
