@@ -29,6 +29,15 @@ static const char *colors[][3]      = {
 	[SchemeUrgent]=	 { col_white, col_red,    col_red },
 };
 
+/* name of the status bar executable */
+#define STATUSBAR "dwmstatus"
+
+/* the special char used to indicate a new block */
+static const char blkseperator = '\x1f';
+
+/* the signal number (+RTMIN) used to notify the status bar when clicked */
+static const int sigstatusclk = 9;
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
@@ -117,7 +126,9 @@ static const Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {0} },
+	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {0} },
+	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

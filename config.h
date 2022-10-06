@@ -49,6 +49,15 @@ static const char *colors[][3]      = {
 	[SchemeUrgent]=	 { white, red, red },
 };
 
+/* name of the status bar executable */
+#define STATUSBAR "dwmstatus"
+
+/* the special char used to indicate a new block */
+static const char blkseperator = '\x1f';
+
+/* the signal number (+RTMIN) used to notify the status bar when clicked */
+static const int sigstatusclk = 9;
+
 /* tagging */
 //static const char *tags[] = { "\U000F07B7", "\U000F0239", "\U000F0A1E", "\U000F0219", "\U000F048A", "\U000F0293", "\U000F0293", "\U000F0293", "\U000F0770", "\U000F033E" };
 static const char *tags[] = { "", "", "", "", "", "", "", "", "", "" };
@@ -175,7 +184,9 @@ static const Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {0} },
+	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {0} },
+	{ ClkStatusText,        0,              Button3,        sigstatusbar, 	{0} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },

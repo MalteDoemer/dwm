@@ -1,0 +1,240 @@
+From a7e7d0274aa33b27c7d1111350788dcfd00536bf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Malte=20D=C3=B6mer?= <maltedoemer@gmail.com>
+Date: Thu, 6 Oct 2022 11:21:01 +0200
+Subject: [PATCH] implemented status colors together with status click
+
+---
+ config.def.h |  26 +++++++++++--
+ dwm.c        | 106 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 122 insertions(+), 10 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 061ad66..4acd80a 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -12,12 +12,28 @@ static const char col_gray2[]       = "#444444";
+ static const char col_gray3[]       = "#bbbbbb";
+ static const char col_gray4[]       = "#eeeeee";
+ static const char col_cyan[]        = "#005577";
++static const char col_black[]       = "#000000";
++static const char col_red[]         = "#ff0000";
++static const char col_yellow[]      = "#ffff00";
++static const char col_white[]       = "#ffffff";
++
+ static const char *colors[][3]      = {
+-	/*               fg         bg         border   */
+-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
++	/*					fg         bg          border   */
++	[SchemeNorm] =	 { col_gray3, col_gray1,  col_gray2 },
++	[SchemeSel]  =	 { col_gray4, col_cyan,   col_cyan },
++	[SchemeWarn] =	 { col_black, col_yellow, col_red },
++	[SchemeUrgent]=	 { col_white, col_red,    col_red },
+ };
+ 
++/* name of the status bar executable */
++#define STATUSBAR "dwmstatus"
++
++/* the special char used to indicate a new block */
++static const char blkseperator = '\x1f';
++
++/* the signal number (+RTMIN) used to notify the status bar when clicked */
++static const int sigstatusclk = 9;
++
+ /* tagging */
+ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+ 
+@@ -103,7 +119,9 @@ static const Button buttons[] = {
+ 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
+ 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+ 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
+-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
++	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {0} },
++	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {0} },
++	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {0} },
+ 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
+ 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
+ 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+diff --git a/dwm.c b/dwm.c
+index e5efb6a..a512b77 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -59,7 +59,7 @@
+ 
+ /* enums */
+ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
+-enum { SchemeNorm, SchemeSel }; /* color schemes */
++enum { SchemeNorm, SchemeSel, SchemeWarn, SchemeUrgent }; /* color schemes */
+ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
+        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
+        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
+@@ -172,6 +172,7 @@ static void focusstack(const Arg *arg);
+ static Atom getatomprop(Client *c, Atom prop);
+ static int getrootptr(int *x, int *y);
+ static long getstate(Window w);
++static pid_t getstatusbarpid();
+ static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
+ static void grabbuttons(Client *c, int focused);
+ static void grabkeys(void);
+@@ -206,6 +207,7 @@ static void setup(void);
+ static void seturgent(Client *c, int urg);
+ static void showhide(Client *c);
+ static void sigchld(int unused);
++static void sigstatusbar(const Arg *arg);
+ static void spawn(const Arg *arg);
+ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
+@@ -238,6 +240,9 @@ static void zoom(const Arg *arg);
+ /* variables */
+ static const char broken[] = "broken";
+ static char stext[256];
++static int statusw;
++static int blk = 0;
++static pid_t statuspid = -1;
+ static int screen;
+ static int sw, sh;           /* X display screen geometry width, height */
+ static int bh;               /* bar height */
+@@ -424,6 +429,7 @@ buttonpress(XEvent *e)
+ 	Client *c;
+ 	Monitor *m;
+ 	XButtonPressedEvent *ev = &e->xbutton;
++	char *text, *s, ch;
+ 
+ 	click = ClkRootWin;
+ 	/* focus monitor if necessary */
+@@ -442,9 +448,24 @@ buttonpress(XEvent *e)
+ 			arg.ui = 1 << i;
+ 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
+ 			click = ClkLtSymbol;
+-		else if (ev->x > selmon->ww - (int)TEXTW(stext))
++		else if (ev->x > selmon->ww - statusw) {
++			x = selmon->ww - statusw;
+ 			click = ClkStatusText;
+-		else
++			blk = 0;
++			for (text = s = stext; *s && x <= ev->x; s++) {
++				if ((unsigned char)(*s) < ' ') {
++					ch = *s;
++					*s = '\0';
++					x += TEXTW(text) - lrpad;
++					*s = ch;
++					text = s + 1;
++					if (x >= ev->x)
++						break;
++					if (ch == blkseperator)
++						blk++;
++				}
++			}
++		} else
+ 			click = ClkWinTitle;
+ 	} else if ((c = wintoclient(ev->window))) {
+ 		focus(c);
+@@ -710,9 +731,30 @@ drawbar(Monitor *m)
+ 
+ 	/* draw status first so it can be overdrawn by tags later */
+ 	if (m == selmon) { /* status is only drawn on selected monitor */
++		char *text, *s, ch;
+ 		drw_setscheme(drw, scheme[SchemeNorm]);
+-		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
+-		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
++
++		x = 0;
++		for (text = s = stext; *s; s++) {
++			if ((unsigned char)(*s) < ' ') {
++				ch = *s;
++				*s = '\0';
++				tw = TEXTW(text) - lrpad;
++				drw_text(drw, m->ww - statusw + x, 0, tw, bh, 0, text, 0);
++				x += tw;
++				*s = ch;
++				text = s + 1;
++
++				if (ch <= LENGTH(colors))
++					drw_setscheme(drw, scheme[(unsigned int)(ch-1)]);
++			}
++		}
++		tw = TEXTW(text) - lrpad + 2;
++		drw_text(drw, m->ww - statusw + x, 0, tw, bh, 0, text, 0);
++		tw = statusw;
+ 	}
+ 
+ 	for (c = m->clients; c; c = c->next) {
+@@ -878,6 +920,30 @@ getatomprop(Client *c, Atom prop)
+ 	return atom;
+ }
+ 
++pid_t
++getstatusbarpid()
++{
++	char buf[32], *str = buf, *c;
++	FILE *fp;
++
++	if (statuspid > 0) {
++		snprintf(buf, sizeof(buf), "/proc/%u/cmdline", statuspid);
++		if ((fp = fopen(buf, "r"))) {
++			fgets(buf, sizeof(buf), fp);
++			while ((c = strchr(str, '/')))
++				str = c + 1;
++			fclose(fp);
++			if (!strcmp(str, STATUSBAR))
++				return statuspid;
++		}
++	}
++	if (!(fp = popen("pidof -s "STATUSBAR, "r")))
++		return -1;
++	fgets(buf, sizeof(buf), fp);
++	pclose(fp);
++	return strtol(buf, NULL, 10);
++}
++
+ int
+ getrootptr(int *x, int *y)
+ {
+@@ -1636,6 +1702,18 @@ sigchld(int unused)
+ 	while (0 < waitpid(-1, NULL, WNOHANG));
+ }
+ 
++void
++sigstatusbar(const Arg *arg)
++{
++	union sigval sv;
++	sv.sival_int = blk;
++
++	if ((statuspid = getstatusbarpid()) <= 0)
++		return;
++
++	sigqueue(statuspid, SIGRTMIN+sigstatusclk, sv);
++}
++
+ void
+ spawn(const Arg *arg)
+ {
+@@ -1987,8 +2065,24 @@ updatesizehints(Client *c)
+ void
+ updatestatus(void)
+ {
+-	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
++	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext))) {
+ 		strcpy(stext, "dwm-"VERSION);
++		statusw = TEXTW(stext) - lrpad + 2;
++	} else {
++		char *text, *s, ch;
++
++		statusw = 0;
++		for (text = s = stext; *s; s++) {
++			if ((unsigned char)(*s) < ' ') {
++				ch = *s;
++				*s = '\0';
++				statusw += TEXTW(text) - lrpad;
++				*s = ch;
++				text = s + 1;
++			}
++		}
++		statusw += TEXTW(text) - lrpad + 2;
++	}
+ 	drawbar(selmon);
+ }
+ 
+-- 
+2.37.3
+
