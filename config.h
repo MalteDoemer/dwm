@@ -123,7 +123,7 @@ static const Key keys[] = {
 
 	{ MODKEY,                       XK_p,      spawn,           {.v = powermenucmd } },
 	{ MODKEY|ShiftMask,  			XK_p,      spawn,           {.v = powerprofilemenucmd } },
-	{ MODKEY,             			XK_l,      spawn,           {.v = screenlayoutcmd } },
+	{ MODKEY|ShiftMask,    			XK_l,      spawn,           {.v = screenlayoutcmd } },
 	{ MODKEY,						XK_c,      spawn,           {.v = wifimenucmd } },
 
 
