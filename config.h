@@ -106,9 +106,12 @@ static const char *powerprofilemenucmd[] = { "powerprofile", NULL };
 static const char *wifimenucmd[] = { "wifimenu", NULL };
 static const char *screenlayoutcmd[] = { "layoutmenu", NULL };
 
-static const char *raisevol[] = SHCMD("amixer_wrapper set Master 5%+");
-static const char *lowervol[] = SHCMD("amixer_wrapper set Master 5%-");
 static const char *togglevol[] = SHCMD("amixer_wrapper set Master toggle");
+static const char *raisevol_large[] = SHCMD("amixer_wrapper set Master 5%+");
+static const char *lowervol_large[] = SHCMD("amixer_wrapper set Master 5%-");
+static const char *raisevol_small[] = SHCMD("amixer_wrapper set Master 1%+");
+static const char *lowervol_small[] = SHCMD("amixer_wrapper set Master 1%-");
+
 
 static const char *brightnessup[] = SHCMD("brightnessctl_wrapper s +5%");
 static const char *brightnessdown[] = SHCMD("brightnessctl_wrapper s 5%-");
@@ -160,8 +163,10 @@ static const Key keys[] = {
 
 	/* multimedia keys */
 	{ 0, 							XF86XK_AudioMute, 			spawn,	 {.v = togglevol      } },
-	{ 0, 							XF86XK_AudioRaiseVolume, 	spawn,	 {.v = raisevol   	  } },
-	{ 0, 							XF86XK_AudioLowerVolume, 	spawn,	 {.v = lowervol 	  } },
+	{ 0, 							XF86XK_AudioRaiseVolume, 	spawn,	 {.v = raisevol_large } },
+	{ 0, 							XF86XK_AudioLowerVolume, 	spawn,	 {.v = lowervol_large } },
+	{ ShiftMask,					XF86XK_AudioRaiseVolume, 	spawn,	 {.v = raisevol_small } },
+	{ ShiftMask,					XF86XK_AudioLowerVolume, 	spawn,	 {.v = lowervol_small } },
 	{ 0, 							XF86XK_MonBrightnessUp, 	spawn,	 {.v = brightnessup   } },
 	{ 0, 							XF86XK_MonBrightnessDown, 	spawn,	 {.v = brightnessdown } },
 
